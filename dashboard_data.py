@@ -11,6 +11,7 @@ def get_ticker_data(ticker, years):
     Returns:
         Price and fundamental data (dict)
     '''
+    
     stock = yf.Ticker(ticker)
 
     return {
