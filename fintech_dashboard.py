@@ -2,6 +2,7 @@ import streamlit as st
 import dashboard_data as data
 
 # Page Setup
+st.set_page_config(layout="wide")
 st.title('Fintech Dashboard')
 
 # Styling
@@ -22,9 +23,14 @@ column_configuration = {
         format = 'compact',
     ),
 
+    'Current Price': st.column_config.NumberColumn(
+        'Current Price',
+        format = 'dollar',
+    ),
+
     'Change ($)': st.column_config.NumberColumn(
         'Change ($)',
-        format = 'compact',
+        format = 'dollar',
     ),
 
     'Change (%)': st.column_config.NumberColumn(
@@ -51,6 +57,7 @@ with st.spinner(f'Fetching data'):
            column_config = column_configuration,
            width = 'stretch'
         )
+       st.dataframe(universe_df)
 
     except Exception as e:
         st.error(f'Error fetching data for {universe}')

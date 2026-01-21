@@ -21,7 +21,7 @@ def get_ticker_data(ticker, years):
         'Market Cap': stock.info.get('marketCap'),
         'Current Price': stock.info.get('currentPrice'),
         'Change ($)': stock.info.get('regularMarketChange'),
-        'Change (%)': stock.info.get('regularMarketChangePercent'),
+        'Change (%)': stock.info.get('regularMarketChangePercent') / 100,
         'Volume': stock.info.get('volume'),
         '52-wk Range': stock.info.get('fiftyTwoWeekRange'),
         'Prices': stock.history(period=f'{years}y')['Close'].tolist()
