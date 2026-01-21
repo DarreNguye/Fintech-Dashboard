@@ -1,22 +1,18 @@
 import streamlit as st
 import dashboard_data as data
+import dashboard_styling as styling
 
 # Page Setup
 st.set_page_config(layout="wide")
 st.title('Fintech Dashboard')
 
-# Styling
-def color_pos_or_neg(value):
-    color = '#09AB3B' if value >= 0 else 'red'
-    return f'color: {color};'
-
 # Constants
-universe = ['NVDA', 'AAPL', 'MSFT', 'AMZN', 'META', 'V', 'LULU']
+universe = ['SOFI', 'AFRM', 'UPST', 'ENVA', 'LC', 'OPRT']
 lookback_years = 1
 universe_df = data.get_universe_data(universe, lookback_years)
-styled_universe_df = universe_df.style.map(color_pos_or_neg, subset=['Change (%)', 'Change ($)'])
+styled_universe_df = universe_df.style.map(styling.color_pos_or_neg, subset=['Change (%)', 'Change ($)'])
 
-# Configure Table
+# Configure DataFrame
 column_configuration = {
     'Market Cap': st.column_config.NumberColumn(
         'Market Cap',
