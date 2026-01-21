@@ -57,7 +57,6 @@ with st.spinner(f'Fetching data'):
            column_config = column_configuration,
            width = 'stretch'
         )
-       st.dataframe(universe_df)
 
     except Exception as e:
         st.error(f'Error fetching data for {universe}')
