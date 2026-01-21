@@ -13,7 +13,7 @@ def get_ticker_data(ticker, years):
     '''
     
     stock = yf.Ticker(ticker)
-
+    
     return {
         'Ticker': ticker,
         'Name': stock.info.get('shortName'),

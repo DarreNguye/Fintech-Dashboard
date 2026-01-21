@@ -25,6 +25,9 @@ with st.spinner(f'Fetching data'):
            column_config = universe_column_configuration,
            width = 'stretch'
         )
+       
+       # Macros DataFrame
+       st.subheader('Macros Data')
 
     except Exception as e:
         st.error(f'Error fetching data for {universe}')
