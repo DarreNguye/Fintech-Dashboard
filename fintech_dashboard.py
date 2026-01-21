@@ -17,7 +17,9 @@ styled_universe_df = universe_df.style.map(styling.color_pos_or_neg, subset=['Ch
 with st.spinner(f'Fetching data'):
     try:
        universe_column_configuration = styling.universe_column_configurations(lookback_years)
-
+       
+       # Stock DataFrame
+       st.subheader('Stock Data')
        st.dataframe(
            styled_universe_df, 
            column_config = universe_column_configuration,
