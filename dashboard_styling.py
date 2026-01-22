@@ -12,14 +12,25 @@ def color_pos_or_neg(value):
     color = '#09AB3B' if value >= 0 else 'red'
     return f'color: {color};'
 
-def universe_column_configurations(lookback_years):
+def universe_column_configurations(lookback_period):
     '''
     Configure column styling for a streamlit DataFrame display
     Parameters:
-        lookback_years: Years of historical data (int)
+        lookback_period: Period of historical data (str)
     Return:
         Column configuration (dict)
     '''
+
+    # Format Lookback Period as Text
+    time_dict = {'D': 'Day', 'M': 'Month', 'Y': 'Year'}
+    if lookback_period == 'MAX':
+        lookback_period_text = 'All Time'
+    elif lookback_period == 'YTD':
+        lookback_period_text = 'Year-to-Date'
+    elif lookback_period[0] == '1':
+        lookback_period_text = f'Last {time_dict[lookback_period[1]]}'
+    else:
+        lookback_period_text = f'Last {lookback_period[0]} {time_dict[lookback_period[1]]}s'
 
     return {
         'Market Cap': st.column_config.NumberColumn(
@@ -48,7 +59,7 @@ def universe_column_configurations(lookback_years):
         ),
 
         'Prices': st.column_config.LineChartColumn(
-            f'Prices (Last {lookback_years} years)',
+            f'Prices ({lookback_period_text})',
             color = 'auto',
         )
     }
