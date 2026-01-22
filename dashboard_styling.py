@@ -27,10 +27,10 @@ def universe_column_configurations(lookback_period):
         lookback_period_text = 'All Time'
     elif lookback_period == 'YTD':
         lookback_period_text = 'Year-to-Date'
-    elif lookback_period[0] == '1':
+    elif lookback_period[:-1] == '1':
         lookback_period_text = f'Last {time_dict[lookback_period[1]]}'
     else:
-        lookback_period_text = f'Last {lookback_period[0]} {time_dict[lookback_period[1]]}s'
+        lookback_period_text = f'Last {lookback_period[:-1]} {time_dict[lookback_period[-1]]}s'
 
     return {
         'Market Cap': st.column_config.NumberColumn(
