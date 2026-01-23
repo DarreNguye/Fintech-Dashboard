@@ -85,35 +85,8 @@ def calculate_start_date(lookback_period):
         return pd.to_datetime(today - pd.DateOffset(years = value))
     
     return None
-    
-def extend_series(series, start_date):
-    '''
-    Extend a series to a starting date and fill missing values with 0
-    Parameters: 
-        series: A series with a datetime index and no NaN values (Series)
-        start_date: A time to extend the series to (Datetime)
-    Returns:
-        A series with an extended starting date (Series)
-    '''
 
-    # Create a Safe Copy
-    extended_series = series.copy()
-
-    # Add the start date if it is not in the series
-    if start_date not in extended_series.index:
-        extended_series.loc[start_date] = pd.NA  
-        extended_series = extended_series.sort_index()
-
-    # Resample to Daily
-    extended_series = extended_series.resample('D').asfreq()
-
-    # Fill NaN
-    extended_series = extended_series.ffill().fillna(0)
-
-    return extended_series
-    
-
-def get_macro_data(api_key, indicator_codes, lookback_period):
+def get_macro_data(api_key, indicator_codes):
     '''
     Fetch relevant macroeconomic data
     Parameters:
@@ -123,10 +96,6 @@ def get_macro_data(api_key, indicator_codes, lookback_period):
         Macroeconomic data (DataFrame)
     '''
 
-    # Calculate Start Date
-    start_date = calculate_start_date(lookback_period)
-    start_date_str = start_date.strftime('%Y-%m-%d') if start_date else None
-
     # Initialize FRED API
     fred = Fred(api_key = api_key)
 
@@ -135,42 +104,14 @@ def get_macro_data(api_key, indicator_codes, lookback_period):
 
     # Pull Information for each Indicator
     for code in indicator_codes.keys():
-        print(code)
-        print(start_date_str)
-
-        indicator_name = indicator_codes[code]
-        current_val = None
-
-        # Pull and Process Indicator Data if it Exists
-        indicator_data = fred.get_series(code, observation_start = start_date_str)
-        if not indicator_data.empty:
-            indicator_data.name = indicator_name
-
-            # Format Data to Include Starting Date and Today's Date
-            indicator_data.index = indicator_data.index.normalize()
-            start_dt = pd.to_datetime(start_date_str)
-            today_dt = pd.to_datetime(pd.Timestamp.now())
-
-            if start_dt not in indicator_data.index:
-                indicator_data[pd.to_datetime(start_dt)] = pd.NA
-
-            if today_dt not in indicator_data.index:
-                indicator_data[pd.to_datetime(today_dt)] = pd.NA
-
-            indicator_data.sort_index(inplace=True)
-
-            # Resample to Daily Data
-            indicator_data = indicator_data.resample('D').ffill().fillna(0)
-            indicator_data = indicator_data.loc[start_date - pd.Timedelta(days = 1):]
-
-            current_val = indicator_data.iloc[-1]
+        indicator_data = fred.get_series(code).ffill()
 
         # Add Data
         macro_data.append({
-            'Indicator': indicator_name,
+            'Indicator': indicator_codes[code],
             'Code': code,
-            'Current Value': current_val,
-            'Values': indicator_data
+            'Current Value': indicator_data.iloc[-1],
+            'Values': indicator_data.tolist()
         })
 
     # Convert to a DataFrame

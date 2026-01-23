@@ -33,6 +33,7 @@ with st.spinner(f'Fetching data'):
             'Period', period_options, default = '1Y', key = 'stock'
         )
         
+        # Get Data and Configs
         universe_df = data.get_universe_data(universe, stock_lookback_period)
         styled_universe_df = universe_df.style.map(styling.color_pos_or_neg, subset=['Change (%)', 'Change ($)'])
         universe_column_configuration = styling.universe_column_configurations(stock_lookback_period)
@@ -43,9 +44,6 @@ with st.spinner(f'Fetching data'):
            column_config = universe_column_configuration,
            width = 'stretch'
         )
-       
-        # Macros DataFrame
-        st.subheader('Macros Data')
 
     except Exception as e:
         st.error(f'Error fetching stock data')
@@ -56,21 +54,16 @@ with st.spinner(f'Fetching data'):
     try:
         st.subheader('Macro Data')
 
-        # Selection for Time Frame
-        macro_lookback_period = st.segmented_control(
-            'Period', period_options, default = '1Y', key = 'macro'
-        )
-        
-        macro_df = data.get_macro_data(fred_api_key, indicators, macro_lookback_period)
+        # Get Data and Configs
+        macro_df = data.get_macro_data(fred_api_key, indicators)
+        macro_column_configuration = styling.macro_column_configurations()
         
         # Macro DataFrame
         macro_table = st.dataframe(
            macro_df, 
+           column_config = macro_column_configuration,
            width = 'stretch'
         )
-       
-        # Macros DataFrame
-        st.subheader('Macros Data')
 
     except Exception as e:
         st.error(f'Error fetching macro data')

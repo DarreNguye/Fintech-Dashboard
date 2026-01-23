@@ -63,3 +63,19 @@ def universe_column_configurations(lookback_period):
             color = 'auto',
         )
     }
+
+def macro_column_configurations():
+    '''
+    Configure column styling for a streamlit DataFrame display
+    Parameters:
+        None
+    Return:
+        Column configuration (dict)
+    '''
+
+    return {
+        'Values': st.column_config.LineChartColumn(
+            'Values (All Time)',
+            color = 'auto',
+        )
+    }
