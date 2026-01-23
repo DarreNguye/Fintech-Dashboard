@@ -62,7 +62,7 @@ def calculate_start_date(lookback_period):
     Parameters:
         lookback_period: Amount of time to pull historical data (str)
     Returns:
-        A start date (Timestamp)
+        A start date (Datetime)
     '''
     today = pd.Timestamp.now()
 
@@ -135,13 +135,39 @@ def get_macro_data(api_key, indicator_codes, lookback_period):
 
     # Pull Information for each Indicator
     for code in indicator_codes.keys():
+        print(code)
+        print(start_date_str)
 
+        indicator_name = indicator_codes[code]
+        current_val = None
+
+        # Pull and Process Indicator Data if it Exists
         indicator_data = fred.get_series(code, observation_start = start_date_str)
-        current_val = None if indicator_data.empty else indicator_data.iloc[-1]
+        if not indicator_data.empty:
+            indicator_data.name = indicator_name
+
+            # Format Data to Include Starting Date and Today's Date
+            indicator_data.index = indicator_data.index.normalize()
+            start_dt = pd.to_datetime(start_date_str)
+            today_dt = pd.to_datetime(pd.Timestamp.now())
+
+            if start_dt not in indicator_data.index:
+                indicator_data[pd.to_datetime(start_dt)] = pd.NA
+
+            if today_dt not in indicator_data.index:
+                indicator_data[pd.to_datetime(today_dt)] = pd.NA
+
+            indicator_data.sort_index(inplace=True)
+
+            # Resample to Daily Data
+            indicator_data = indicator_data.resample('D').ffill().fillna(0)
+            indicator_data = indicator_data.loc[start_date - pd.Timedelta(days = 1):]
+
+            current_val = indicator_data.iloc[-1]
 
         # Add Data
         macro_data.append({
-            'Indicator': indicator_codes[code],
+            'Indicator': indicator_name,
             'Code': code,
             'Current Value': current_val,
             'Values': indicator_data
@@ -150,6 +176,7 @@ def get_macro_data(api_key, indicator_codes, lookback_period):
     # Convert to a DataFrame
     macro_df = pd.DataFrame(macro_data)
     macro_df.set_index('Indicator', inplace = True)
+
     return macro_df
 
 
