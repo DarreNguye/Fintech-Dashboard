@@ -76,6 +76,7 @@ def macro_column_configurations():
     return {
         'Values': st.column_config.LineChartColumn(
             'Values (All Time)',
-            color = 'auto',
+            color = '#F8F8F8',
+            width = 'medium'
         )
     }

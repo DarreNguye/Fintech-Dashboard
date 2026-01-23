@@ -24,10 +24,9 @@ indicators = {
     }
 
 # Load Stock Data
+st.subheader('Stock Data')
 with st.spinner(f'Fetching data'):
     try:
-        st.subheader('Stock Data')
-
         # Selection for Time Frame
         stock_lookback_period = st.segmented_control(
             'Period', period_options, default = '1Y', key = 'stock'
@@ -50,10 +49,9 @@ with st.spinner(f'Fetching data'):
         st.error(e)
 
 # Load Macro Data
+st.subheader('Macro Data')
 with st.spinner(f'Fetching data'):
     try:
-        st.subheader('Macro Data')
-
         # Get Data and Configs
         macro_df = data.get_macro_data(fred_api_key, indicators)
         macro_column_configuration = styling.macro_column_configurations()
@@ -62,7 +60,7 @@ with st.spinner(f'Fetching data'):
         macro_table = st.dataframe(
            macro_df, 
            column_config = macro_column_configuration,
-           width = 'stretch'
+           width = 'content'
         )
 
     except Exception as e:
