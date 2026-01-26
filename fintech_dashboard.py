@@ -14,7 +14,7 @@ load_dotenv()
 # Constants
 fred_api_key = os.getenv('FRED_API_KEY')
 universe = ['SOFI', 'AFRM', 'UPST', 'ENVA', 'LC', 'OPRT']
-period_options = ['1D', '5D', '1M', '6M', 'YTD', '1Y', '5Y', 'MAX']
+period_options = ['5D', '1M', '6M', 'YTD', '1Y', '5Y', 'MAX']
 indicators = {
     'UNRATE': 'Unemployment', 
     'DFF': 'Interest', 

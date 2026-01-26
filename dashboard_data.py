@@ -56,36 +56,6 @@ def get_universe_data(tickers, lookback_period):
     universe_df.set_index('Ticker', inplace = True)
     return universe_df
 
-def calculate_start_date(lookback_period):
-    '''
-    Calculate a start date using the lookback_period
-    Parameters:
-        lookback_period: Amount of time to pull historical data (str)
-    Returns:
-        A start date (Datetime)
-    '''
-    today = pd.Timestamp.now()
-
-    # Handle MAX and YTD Lookback Periods
-    if lookback_period == 'MAX':
-        return None
-    
-    if lookback_period == 'YTD':
-        return pd.to_datetime(today.replace(month = 1, day = 1))
-    
-    # Convert Look Back Period to Timestamp
-    unit = lookback_period[-1]
-    value = int(lookback_period[:-1])
-
-    if unit == 'D':
-        return pd.to_datetime(today - pd.DateOffset(days = value))
-    elif unit == 'M':
-        return pd.to_datetime(today - pd.DateOffset(months = value))
-    elif unit == 'Y':
-        return pd.to_datetime(today - pd.DateOffset(years = value))
-    
-    return None
-
 def get_macro_data(api_key, indicator_codes):
     '''
     Fetch relevant macroeconomic data
